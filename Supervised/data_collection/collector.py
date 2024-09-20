@@ -1,19 +1,19 @@
-import cv2, numpy as np, pyautogui as pg, keyboard, json, pygetwindow as gw, time, base64
+import cv2, numpy as np, pyautogui as pg, keyboard, json, pygetwindow as gw, base64
 
 def text_on_frame(text, frame):
-    org = (0, 20)  # Bottom-left corner of the text
+    org = (0, 20)  # bottom-left corner of the text
     fontFace = cv2.FONT_HERSHEY_COMPLEX_SMALL
     fontScale = 1
     color = (0, 0, 0)
     thickness = 2
 
-    # Calculate and draw the size of the text box
+    # calculate and draw the size of the text box
     (text_width, text_height), baseline = cv2.getTextSize(text, fontFace, fontScale, thickness)
     top_left_corner = (org[0], org[1] - text_height - baseline)
     bottom_right_corner = (org[0] + text_width, org[1] + baseline)
     cv2.rectangle(frame, top_left_corner, bottom_right_corner, (255, 255, 255), -1)  
 
-    # Step 5: Add the text on top of the blue rectangle
+    # add the text
     cv2.putText(frame, text, org, fontFace, fontScale, color, thickness)
 
     return frame
@@ -22,10 +22,10 @@ def get_window_info(title):
     window = gw.getWindowsWithTitle(title)
 
     if window:
-        # Get the first matching window
+        # get the first matching window
         app_window = window[0]
         
-        # Get window position and size
+        # get window position and resolution
         pos = (app_window.left, app_window.top)
         res = (app_window.width, app_window.height)
         return (pos, res)
@@ -33,9 +33,9 @@ def get_window_info(title):
     return None
 
 win_pos, res = get_window_info("Clock")
-print(win_pos, res)
 fps = 30
 keys = ['up', 'down', 'left', 'right']
+print(win_pos, res)
 
 out_json = {
             'key_inputs' : [],
@@ -47,6 +47,8 @@ while run:
     # take a screenshot of the game
     win_pos = get_window_info("Clock")[0]
     img = pg.screenshot(region=(win_pos[0], win_pos[1], res[0], res[1]))
+
+    # process the screenshot
     frame = np.array(img)
     frame = cv2.resize(frame, (0, 0), fx = 0.5, fy = 0.5) # down scale by half
     frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR) # color correct
@@ -66,7 +68,7 @@ print("Recording ended")
 print("Number of frames:", len(out_json['frames']))
 print("Saving files ...")
 
-# make out_vid
+# make out_vid.mp4
 res = (frame.shape[1], frame.shape[0])
 out_vid = cv2.VideoWriter("out_vid.mp4", cv2.VideoWriter_fourcc(*"mp4v"), fps, res)
 
@@ -78,8 +80,10 @@ for i, frame in enumerate(out_json['frames']):
         frame = text_on_frame(", ".join(out_json['key_inputs'][i]), frame)
     out_vid.write(frame)
 
+out_vid.release()
+
+# make out_json.json
 with open('out_json.json', 'w') as f:
     json.dump(out_json, f)
-out_vid.release()
 
 print("Files saved")
