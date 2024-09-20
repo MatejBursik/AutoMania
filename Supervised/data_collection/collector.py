@@ -32,7 +32,8 @@ def get_window_info(title):
 
     return None
 
-win_pos, res = get_window_info("Clock")
+title = "Trackmania"
+win_pos, res = get_window_info(title)
 fps = 30
 keys = ['up', 'down', 'left', 'right']
 print(win_pos, res)
@@ -45,12 +46,13 @@ out_json = {
 run = True
 while run:
     # take a screenshot of the game
-    win_pos = get_window_info("Clock")[0]
+    win_pos = get_window_info(title)[0]
     img = pg.screenshot(region=(win_pos[0], win_pos[1], res[0], res[1]))
 
     # process the screenshot
     frame = np.array(img)
     frame = cv2.resize(frame, (0, 0), fx = 0.5, fy = 0.5) # down scale by half
+    frame = frame[17:-5, 5:-5] # removing unwanted edges
     frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR) # color correct
 
     # record the keys pressed during the screenshot
