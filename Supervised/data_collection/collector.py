@@ -1,4 +1,4 @@
-import cv2, numpy as np, pyautogui as pg, keyboard, json, pygetwindow as gw, time
+import cv2, numpy as np, pyautogui as pg, keyboard, json, pygetwindow as gw, time, base64
 
 def text_on_frame(text, frame):
     org = (0, 20)  # Bottom-left corner of the text
@@ -19,8 +19,6 @@ def text_on_frame(text, frame):
     return frame
 
 def get_window_info(title):
-    windows = gw.getAllTitles()
-    windows = [win for win in windows if win]
     window = gw.getWindowsWithTitle(title)
 
     if window:
@@ -34,22 +32,24 @@ def get_window_info(title):
 
     return None
 
-win_pos, res = get_window_info("Trackmania")
+win_pos, res = get_window_info("Clock")
 print(win_pos, res)
 fps = 30
 keys = ['up', 'down', 'left', 'right']
 
-# outputs
-out_vid = cv2.VideoWriter("out_vid.mp4", cv2.VideoWriter_fourcc(*"mp4v"), fps, res)
-out_json = []
+out_json = {
+            'key_inputs' : [],
+            'frames' : []
+            }
 
 run = True
 while run:
     # take a screenshot of the game
-    win_pos = get_window_info("Trackmania")[0]
+    win_pos = get_window_info("Clock")[0]
     img = pg.screenshot(region=(win_pos[0], win_pos[1], res[0], res[1]))
     frame = np.array(img)
-    frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+    frame = cv2.resize(frame, (0, 0), fx = 0.5, fy = 0.5) # down scale by half
+    frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR) # color correct
 
     # record the keys pressed during the screenshot
     pressed_keys = [key for key in keys if keyboard.is_pressed(key)]
@@ -58,20 +58,28 @@ while run:
         run = False
 
     # update out_json
-    """
-    out_json.append({
-            'frame' : frame.tolist(),
-            'key_info' : pressed_keys
-            })
-    """
+    _, encoded = cv2.imencode('.jpg', frame)
+    out_json['frames'].append(base64.b64encode(encoded).decode('utf-8'))
+    out_json['key_inputs'].append(pressed_keys)
 
-    # update out_vid
-    if len(pressed_keys)>0:
-        frame = text_on_frame(", ".join(pressed_keys), frame)
+print("Recording ended")
+print("Number of frames:", len(out_json['frames']))
+print("Saving files ...")
+
+# make out_vid
+res = (frame.shape[1], frame.shape[0])
+out_vid = cv2.VideoWriter("out_vid.mp4", cv2.VideoWriter_fourcc(*"mp4v"), fps, res)
+
+for i, frame in enumerate(out_json['frames']):
+    encoded = base64.b64decode(frame)
+    frame = np.frombuffer(encoded, dtype=np.uint8)
+    frame = cv2.imdecode(frame, cv2.IMREAD_COLOR)
+    if len(out_json['key_inputs'][i])>0:
+        frame = text_on_frame(", ".join(out_json['key_inputs'][i]), frame)
     out_vid.write(frame)
 
-    time.sleep(1/fps)
-        
 with open('out_json.json', 'w') as f:
     json.dump(out_json, f)
 out_vid.release()
+
+print("Files saved")
