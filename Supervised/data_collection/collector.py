@@ -1,4 +1,4 @@
-import cv2, numpy as np, pyautogui as pg, keyboard, json, pygetwindow as gw, base64
+import cv2, numpy as np, pyautogui as pg, keyboard, json, pygetwindow as gw, base64, time
 
 def text_on_frame(text, frame):
     org = (0, 20)  # bottom-left corner of the text
@@ -32,18 +32,23 @@ def get_window_info(title):
 
     return None
 
-title = "Trackmania"
-win_pos, res = get_window_info(title)
-fps = 30
-keys = ['up', 'down', 'left', 'right']
-print(win_pos, res)
-
 out_json = {
             'key_inputs' : [],
             'frames' : []
             }
 
-run = True
+title = "Trackmania"
+win_pos, res = get_window_info(title)
+keys = ['up', 'down', 'left', 'right']
+run = False
+print(win_pos, res)
+
+while not run:
+    if keyboard.is_pressed('shift'): # start recording by 'shift'
+        run = True
+        print("Recording started ...")
+
+start = time.time()
 while run:
     # take a screenshot of the game
     win_pos = get_window_info(title)[0]
@@ -58,19 +63,22 @@ while run:
     # record the keys pressed during the screenshot
     pressed_keys = [key for key in keys if keyboard.is_pressed(key)]
     
-    if keyboard.is_pressed('esc'):
+    if keyboard.is_pressed('ctrl'): # end recording by 'ctrl'
         run = False
 
     # update out_json
     _, encoded = cv2.imencode('.jpg', frame)
     out_json['frames'].append(base64.b64encode(encoded).decode('utf-8'))
     out_json['key_inputs'].append(pressed_keys)
+end = time.time()
 
 print("Recording ended")
 print("Number of frames:", len(out_json['frames']))
+print("Time of recording:", end - start)
 print("Saving files ...")
 
 # make out_vid.mp4
+fps = len(out_json['frames'])/(end - start)
 res = (frame.shape[1], frame.shape[0])
 out_vid = cv2.VideoWriter("out_vid.mp4", cv2.VideoWriter_fourcc(*"mp4v"), fps, res)
 
