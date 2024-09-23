@@ -94,6 +94,6 @@ out_vid.release()
 
 # make out_json.json
 with open('out_json.json', 'w') as f:
-    json.dump(out_json, f)
+    json.dump(out_json, f, indent=4)
 
 print("Files saved")
