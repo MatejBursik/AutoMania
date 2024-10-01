@@ -6,7 +6,7 @@ run = False
 while not run:
     if keyboard.is_pressed('shift'): # start recording by 'shift'
         run = True
-        print("Recording started ...")
+        print("Started AutoMania ...")
 
 while run:
     if keyboard.is_pressed('ctrl'): # end recording by 'ctrl'

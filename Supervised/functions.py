@@ -1,4 +1,5 @@
 import cv2, numpy as np, pyautogui as pg, keyboard, pygetwindow as gw
+from fastai.vision.all import *
 
 def process_result(result):
     """
@@ -66,6 +67,13 @@ def decision(screen):
     - apply the neural network model onto the screenshot
     - get a decision out of it and store it in result
     """
-    result = None
+    # Load the exported learner
+    learn = load_learner('trackmania_learner.pkl')
+
+    # Now you can make predictions
+    img = PILImage.create('path_to_image.jpg')
+
+    # steering, throttle, brake 
+    result = learn.predict(img)
 
     return result
