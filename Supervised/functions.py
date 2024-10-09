@@ -1,5 +1,7 @@
 import cv2, numpy as np, pyautogui as pg, keyboard, pygetwindow as gw
 from fastai.vision.all import *
+from pynput.keyboard import Controller, Key
+keyboard_controller = Controller()
 
 def process_result(result):
     """
@@ -7,28 +9,41 @@ def process_result(result):
     - create keyboard input based on the result
     """
 
-    for i,v in enumerate(result):
-        if v > 0.7:
+    for i,v in enumerate(result[0]):
+        if v > 0.4 :
+            print(i, round(v, 3), 'start')
             match i:
                 case 0:
-                    keyboard.press("up")
+                    if v < 0:
+                        keyboard_controller.press(Key.left)
+                    elif v > 0:
+                        keyboard_controller.press(Key.right)
                 case 1:
-                    keyboard.press("down")
+                    keyboard_controller.press(Key.up)
                 case 2:
-                    keyboard.press("left")
-                case 3:
-                    keyboard.press("right")
+                    keyboard_controller.press(Key.down)
+        elif v < -0.4:
+            print(i, round(v, 3), 'start')
+            match i:
+                case 0:
+                    if v < 0:
+                        keyboard_controller.press(Key.left)
+                    elif v > 0:
+                        keyboard_controller.press(Key.right)
         else:
+            print(i, round(v, 3), 'end')
             match i:
                 case 0:
-                    keyboard.release("up")
+                    if v < 0:
+                        keyboard_controller.release(Key.left)
+                    elif v > 0:
+                        keyboard_controller.release(Key.right)
                 case 1:
-                    keyboard.release("down")
+                    keyboard_controller.release(Key.up)
                 case 2:
-                    keyboard.release("left")
-                case 3:
-                    keyboard.release("right")
+                    keyboard_controller.release(Key.down)
 
+    print()
 
 def get_window_info(title):
     window = gw.getWindowsWithTitle(title)
@@ -62,18 +77,4 @@ def take_a_screenshot(title):
     return screen
 
 
-def decision(screen):
-    """
-    - apply the neural network model onto the screenshot
-    - get a decision out of it and store it in result
-    """
-    # Load the exported learner
-    learn = load_learner('trackmania_learner.pkl')
 
-    # Now you can make predictions
-    img = PILImage.create('path_to_image.jpg')
-
-    # steering, throttle, brake 
-    result = learn.predict(img)
-
-    return result
