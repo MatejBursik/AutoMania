@@ -1,2 +1,4 @@
 out_json.json
 out_vid.mp4
+/venv
+/Supervised/__pycache__

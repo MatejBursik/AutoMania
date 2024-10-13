@@ -33,7 +33,7 @@ def get_window_info(title):
     return None
 
 # Create a folder to save the images and the CSV
-data_folder = 'trackmania_data'
+data_folder = 'Supervised/data/test'
 if not os.path.exists(data_folder):
     os.makedirs(data_folder)
 csv_file = os.path.join(data_folder, 'controls.csv')
@@ -68,7 +68,7 @@ while run:
     # Process the screenshot
     frame = np.array(img)
     frame = cv2.resize(frame, (0, 0), fx = 0.5, fy = 0.5)  # Downscale by half
-    frame = frame[17:-5, 5:-5]  # Remove unwanted edges
+    frame = frame[100:-50, 5:-5]  # Remove unwanted edges
     frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)  # Color correction
 
     # Calculate the steering, throttle, and brake values based on key inputs
