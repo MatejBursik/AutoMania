@@ -5,7 +5,7 @@ keyboard_controller = Controller()
 
 def process_result(result):
     """
-    - result is the answere of the neural network where 0 = up, 1 = down, 2 = left, 3 = right
+    - result is the answere of the neural network where 0 = steering, 1 = down, 2 = throttle, 3 = brake
     - create keyboard input based on the result
     """
     sens = 0.6
@@ -14,34 +14,33 @@ def process_result(result):
             print(i, round(v, 3), 'start')
             match i:
                 case 0:
-                    if v < 0:
-                        keyboard_controller.press(Key.left)
-                    elif v > 0:
+                    if v > 0:
                         keyboard_controller.press(Key.right)
+                        print('steering', round(v, 3), 'on')
                 case 1:
                     keyboard_controller.press(Key.up)
+                    print('throttle', round(v, 3), 'on')
                 case 2:
                     keyboard_controller.press(Key.down)
+                    print('brake', round(v, 3), 'on')
         elif v < -sens:
-            print(i, round(v, 3), 'start')
             match i:
                 case 0:
                     if v < 0:
                         keyboard_controller.press(Key.left)
-                    elif v > 0:
-                        keyboard_controller.press(Key.right)
+                        print('steering', round(v, 3), 'on')
         else:
-            print(i, round(v, 3), 'end')
             match i:
                 case 0:
-                    if v < 0:
-                        keyboard_controller.release(Key.left)
-                    elif v > 0:
-                        keyboard_controller.release(Key.right)
+                    keyboard_controller.release(Key.left)
+                    keyboard_controller.release(Key.right)
+                    print('steering', round(v, 3), 'off')
                 case 1:
                     keyboard_controller.release(Key.up)
+                    print('throttle', round(v, 3), 'on')
                 case 2:
                     keyboard_controller.release(Key.down)
+                    print('brake', round(v, 3), 'off')
 
     print()
 
