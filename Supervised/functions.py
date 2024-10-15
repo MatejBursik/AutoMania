@@ -10,7 +10,7 @@ def process_result(result):
     """
 
     for i,v in enumerate(result[0]):
-        if v > 0.4 :
+        if v > 0.8 :
             print(i, round(v, 3), 'start')
             match i:
                 case 0:
@@ -22,7 +22,7 @@ def process_result(result):
                     keyboard_controller.press(Key.up)
                 case 2:
                     keyboard_controller.press(Key.down)
-        elif v < -0.4:
+        elif v < -0.8:
             print(i, round(v, 3), 'start')
             match i:
                 case 0:

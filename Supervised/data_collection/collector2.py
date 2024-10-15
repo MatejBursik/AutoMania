@@ -33,7 +33,7 @@ def get_window_info(title):
     return None
 
 # Create a folder to save the images and the CSV
-data_folder = 'Supervised/data/test'
+data_folder = 'Supervised/data/training16'
 if not os.path.exists(data_folder):
     os.makedirs(data_folder)
 csv_file = os.path.join(data_folder, 'controls.csv')

@@ -4,8 +4,7 @@ def get_y(row):
     return tensor([row['steering'], row['throttle'], row['brake']])
 
 def get_x(row):
-    path = Path('Supervised/data/track2')
-    return path / row['frame']  # Using '/' for path concatenation
+    return row['frame']  # Using '/' for path concatenation
 
 def decision(screen):
     """
@@ -13,7 +12,7 @@ def decision(screen):
     - get a decision out of it and store it in result
     """
     # Load the exported learner
-    learn = load_learner('Supervised/trackmania_learner.pkl')
+    learn = load_learner('Supervised/trackmania_learner_fp16.pkl')
 
     # steering, throttle, brake 
     result = learn.predict(screen)
