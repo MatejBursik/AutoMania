@@ -8,9 +8,9 @@ def process_result(result):
     - result is the answere of the neural network where 0 = up, 1 = down, 2 = left, 3 = right
     - create keyboard input based on the result
     """
-
+    sens = 0.6
     for i,v in enumerate(result[0]):
-        if v > 0.8 :
+        if v > sens :
             print(i, round(v, 3), 'start')
             match i:
                 case 0:
@@ -22,7 +22,7 @@ def process_result(result):
                     keyboard_controller.press(Key.up)
                 case 2:
                     keyboard_controller.press(Key.down)
-        elif v < -0.8:
+        elif v < -sens:
             print(i, round(v, 3), 'start')
             match i:
                 case 0:
