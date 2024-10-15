@@ -1,4 +1,5 @@
 from functions import *
+import keyboard
 
 def get_y(row):
     return tensor([row['steering'], row['throttle'], row['brake']])
@@ -34,7 +35,7 @@ while True:
             run = False
         screen = take_a_screenshot(title)
         result = decision(screen)
-        process_result(result)
+        process_result(result, True)
 
     if keyboard.is_pressed('t'): # terminate program by 't'
         break
