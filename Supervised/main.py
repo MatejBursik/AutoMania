@@ -24,17 +24,18 @@ print("ON")
 title = "Trackmania"
 run = False
 
-while not run:
-    if keyboard.is_pressed('q'): # start recording by 'q'
+while True:
+    if keyboard.is_pressed('q'): # start driving by 'q'
         run = True
         print("Started AutoMania ...")
 
-while run:
-    if keyboard.is_pressed('e'): # end recording by 'e'
+    while run:
+        if keyboard.is_pressed('e'): # end driving by 'e'
+            run = False
+        screen = take_a_screenshot(title)
+        result = decision(screen)
+        process_result(result)
+
+    if keyboard.is_pressed('t'): # terminate program by 't'
         break
-    screen = take_a_screenshot(title)
-    result = decision(screen)
-
-    process_result(result)
-
 print("OFF")
