@@ -1,9 +1,9 @@
-import cv2, numpy as np, pyautogui as pg, keyboard, pygetwindow as gw
+import cv2, numpy as np, pyautogui as pg, pygetwindow as gw
 from fastai.vision.all import *
 from pynput.keyboard import Controller, Key
 keyboard_controller = Controller()
 
-def process_result(result):
+def process_result(result, toggle):
     """
     - result is the answere of the neural network where 0 = steering, 1 = down, 2 = throttle, 3 = brake
     - create keyboard input based on the result
@@ -16,33 +16,40 @@ def process_result(result):
                 case 0:
                     if v > 0:
                         keyboard_controller.press(Key.right)
-                        print('steering', round(v, 3), 'on')
+                        if toggle:
+                            print('steering', round(v, 3), 'on')
                 case 1:
                     keyboard_controller.press(Key.up)
-                    print('throttle', round(v, 3), 'on')
+                    if toggle:
+                        print('throttle', round(v, 3), 'on')
                 case 2:
                     keyboard_controller.press(Key.down)
-                    print('brake', round(v, 3), 'on')
+                    if toggle:
+                        print('brake', round(v, 3), 'on')
         elif v < -sens:
             match i:
                 case 0:
                     if v < 0:
                         keyboard_controller.press(Key.left)
-                        print('steering', round(v, 3), 'on')
+                        if toggle:
+                            print('steering', round(v, 3), 'on')
         else:
             match i:
                 case 0:
                     keyboard_controller.release(Key.left)
                     keyboard_controller.release(Key.right)
-                    print('steering', round(v, 3), 'off')
+                    if toggle:
+                        print('steering', round(v, 3), 'off')
                 case 1:
                     keyboard_controller.release(Key.up)
-                    print('throttle', round(v, 3), 'on')
+                    if toggle:
+                        print('throttle', round(v, 3), 'on')
                 case 2:
                     keyboard_controller.release(Key.down)
-                    print('brake', round(v, 3), 'off')
-
-    print()
+                    if toggle:
+                        print('brake', round(v, 3), 'off')
+    if toggle:
+        print()
 
 def get_window_info(title):
     window = gw.getWindowsWithTitle(title)
