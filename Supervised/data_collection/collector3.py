@@ -49,9 +49,8 @@ while run:
 
     # Process the screenshot
     frame = np.array(img)
-    frame = cv2.resize(frame, (800, 450), interpolation=cv2.INTER_LINEAR)
-    frame = cv2.resize(frame, (0, 0), fx = 0.5, fy = 0.5)
-    frame = frame[100:-50, 5:-5]  # Remove unwanted edges
+    frame = cv2.resize(frame, (400, 225), interpolation=cv2.INTER_LINEAR) # Downscale
+    frame = frame[125:-25, 5:-5]  # Remove unwanted edges
     frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)  # Color correction
 
     # Calculate the steering, throttle, and brake values based on key inputs
