@@ -49,7 +49,8 @@ while run:
 
     # Process the screenshot
     frame = np.array(img)
-    frame = cv2.resize(frame, (0, 0), fx = 0.5, fy = 0.5)  # Downscale by half
+    frame = cv2.resize(frame, (800, 450), interpolation=cv2.INTER_LINEAR)
+    frame = cv2.resize(frame, (0, 0), fx = 0.5, fy = 0.5)
     frame = frame[100:-50, 5:-5]  # Remove unwanted edges
     frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)  # Color correction
 
