@@ -1,4 +1,4 @@
-import cv2, numpy as np, pyautogui as pg, pygetwindow as gw
+import cv2, numpy as np, pyautogui as pg, pygetwindow as gw, time
 from fastai.vision.all import *
 from pynput.keyboard import Controller, Key
 keyboard_controller = Controller()
@@ -9,43 +9,45 @@ def process_result(result, toggle):
     - create keyboard input based on the result
     """
     sens = 0.6
+    press_t = 0.125 # 0.1 struggles up hills, 0.2 basically the same speed as release on next cycle
     for i,v in enumerate(result[0]):
         if v > sens :
-            print(i, round(v, 3), 'start')
             match i:
                 case 0:
-                    if v > 0:
-                        keyboard_controller.press(Key.right)
-                        if toggle:
-                            print('steering', round(v, 3), 'on')
+                    keyboard_controller.press(Key.right)
+                    time.sleep(press_t)
+                    keyboard_controller.release(Key.right)
+                    if toggle:
+                        print('steering', round(v, 3), 'on')
                 case 1:
                     keyboard_controller.press(Key.up)
+                    time.sleep(press_t)
+                    keyboard_controller.release(Key.up)
                     if toggle:
                         print('throttle', round(v, 3), 'on')
                 case 2:
                     keyboard_controller.press(Key.down)
+                    time.sleep(press_t)
+                    keyboard_controller.release(Key.down)
                     if toggle:
                         print('brake', round(v, 3), 'on')
         elif v < -sens:
             match i:
                 case 0:
-                    if v < 0:
-                        keyboard_controller.press(Key.left)
-                        if toggle:
-                            print('steering', round(v, 3), 'on')
+                    keyboard_controller.press(Key.left)
+                    time.sleep(press_t)
+                    keyboard_controller.release(Key.left)
+                    if toggle:
+                        print('steering', round(v, 3), 'on')
         else:
             match i:
                 case 0:
-                    keyboard_controller.release(Key.left)
-                    keyboard_controller.release(Key.right)
                     if toggle:
                         print('steering', round(v, 3), 'off')
                 case 1:
-                    keyboard_controller.release(Key.up)
                     if toggle:
                         print('throttle', round(v, 3), 'on')
                 case 2:
-                    keyboard_controller.release(Key.down)
                     if toggle:
                         print('brake', round(v, 3), 'off')
     if toggle:
