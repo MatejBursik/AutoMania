@@ -15,7 +15,7 @@ def get_window_info(title):
     return None
 
 # Create a folder to save the images and the CSV
-data_folder = 'Supervised/data/training16'
+data_folder = 'Supervised/data/correction_6'
 if not os.path.exists(data_folder):
     os.makedirs(data_folder)
 csv_file = os.path.join(data_folder, 'controls.csv')
@@ -50,7 +50,7 @@ while run:
     # Process the screenshot
     frame = np.array(img)
     frame = cv2.resize(frame, (400, 225), interpolation=cv2.INTER_LINEAR) # Downscale
-    frame = frame[125:-25, 5:-5]  # Remove unwanted edges
+    frame = frame[105:-25, 5:-5]  # Remove unwanted edges
     frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)  # Color correction
 
     # Calculate the steering, throttle, and brake values based on key inputs
