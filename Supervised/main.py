@@ -2,10 +2,10 @@ from functions import *
 import keyboard
 
 def get_y(row):
-    return tensor([row['steering'], row['throttle'], row['brake']])
+    return tensor([row['left'], row['right'], row['forward'], row['backward']])
 
 def get_x(row):
-    return row['frame']  # Using '/' for path concatenation
+    return row['frame']
 
 def decision(screen):
     """
@@ -13,7 +13,7 @@ def decision(screen):
     - get a decision out of it and store it in result
     """
     # Load the exported learner
-    learn = load_learner('Supervised/trackmania_learner_fp16.pkl')
+    learn = load_learner('Supervised/trackmania_resnet50_fp16_all_corrected_2.pkl')
 
     # steering, throttle, brake 
     result = learn.predict(screen)
