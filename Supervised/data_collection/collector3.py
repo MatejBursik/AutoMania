@@ -15,7 +15,7 @@ def get_window_info(title):
     return None
 
 # Create a folder to save the images and the CSV
-data_folder = 'Supervised/data/correction_6'
+data_folder = 'Supervised/data/correction_10'
 if not os.path.exists(data_folder):
     os.makedirs(data_folder)
 csv_file = os.path.join(data_folder, 'controls.csv')

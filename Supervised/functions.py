@@ -5,7 +5,7 @@ keyboard_controller = Controller()
 
 def process_result(result, toggle):
     sens = 0.5
-    press_t = 0.1 # 0.1 struggles up hills, 0.2 basically the same speed as release on next cycle
+    press_t = 0.09 # 0.1 struggles up hills, 0.2 basically the same speed as release on next cycle
 
     bool_result = [v>sens for v in result[0]]
     keys = [Key.left, Key.right, Key.up, Key.down]
