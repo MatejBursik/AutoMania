@@ -13,7 +13,7 @@ def decision(screen):
     - get a decision out of it and store it in result
     """
     # Load the exported learner
-    learn = load_learner('Supervised/trackmania_resnet50_fp16_all_corrected_2.pkl')
+    learn = load_learner('Supervised/trackmania_resnet50_fp16_all_corrected_3.pkl')
 
     # steering, throttle, brake 
     result = learn.predict(screen)

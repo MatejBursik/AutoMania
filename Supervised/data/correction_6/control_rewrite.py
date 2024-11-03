@@ -1,5 +1,5 @@
 """
-0-60 left,forward 51
+0-70 right,forward 71
 
 --- format
 frame,left,right,forward,backward
@@ -8,7 +8,7 @@ frame_0.jpg,0,0,0,0
 import pandas as pd
 
 inputs = [
-    [[0, 60], [1, 0, 1, 0], 3]
+    [[0, 70], [1, 0, 1, 0], 3]
 ]
 controls_df = pd.DataFrame(columns=['frame', 'left', 'right', 'forward', 'backward'])
 
