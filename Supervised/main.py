@@ -14,8 +14,6 @@ def decision(screen):
     """
     # Load the exported learner
     learn = load_learner('Supervised/trackmania_resnet50_fp16_all_corrected_3.pkl')
-
-    # steering, throttle, brake 
     result = learn.predict(screen)
 
     return result
